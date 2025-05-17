@@ -1,0 +1,18 @@
+package jp.keisekisya.webapi.dto;
+
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+@Data
+public class RegistMstCustomerRequest implements RequestDto {
+	@NotNull
+	@Size(min = 1)
+	private String companyId;
+
+	@NotNull
+	@Size(min = 1)
+	private String customerName;
+
+	private String customerAddr;
+}
