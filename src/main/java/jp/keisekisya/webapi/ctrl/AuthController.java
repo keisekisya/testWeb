@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-public class AuthController {
+public class AuthController extends BaseController {
 
 	private final AuthService service;
 

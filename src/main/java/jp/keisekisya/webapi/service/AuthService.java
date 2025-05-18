@@ -1,5 +1,6 @@
 package jp.keisekisya.webapi.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import jp.keisekisya.webapi.dto.LoginRequest;
 import jp.keisekisya.webapi.dto.LoginResponse;
-import jp.keisekisya.webapi.handler.AuthException;
+import jp.keisekisya.webapi.handler.BusinessException;
 import jp.keisekisya.webapi.security.JwtUtil;
 import lombok.AllArgsConstructor;
 
@@ -31,7 +32,7 @@ public class AuthService {
 			authenticationManager
 					.authenticate(new UsernamePasswordAuthenticationToken(dto.getUserName(), dto.getPassword()));
 		} catch (BadCredentialsException e) {
-			throw new AuthException();
+			throw new BusinessException("B00004", HttpStatus.UNAUTHORIZED);
 		}
 
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(dto.getUserName());

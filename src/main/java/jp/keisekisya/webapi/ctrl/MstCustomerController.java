@@ -14,10 +14,11 @@ import jp.keisekisya.webapi.dto.ResponseDto;
 import jp.keisekisya.webapi.dto.UpdateMstCustomerRequest;
 import jp.keisekisya.webapi.service.MstCustomerService;
 import lombok.AllArgsConstructor;
+import lombok.val;
 
 @RestController
 @AllArgsConstructor
-public class MstCustomerController {
+public class MstCustomerController extends BaseController {
 	private static final String PATH = "/customer";
 	private static final String GET = PATH + "/get";
 
@@ -61,6 +62,7 @@ public class MstCustomerController {
 	 */
 	@PostMapping(GET)
 	public ResponseDto getItem(@Valid @RequestBody GetMstCustomerRequest dto) {
+		val username = getCurrentUsername();
 		return service.getItemList(dto);
 	}
 }

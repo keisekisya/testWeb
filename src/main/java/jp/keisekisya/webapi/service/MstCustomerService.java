@@ -25,6 +25,7 @@ import lombok.val;
 @Service
 @AllArgsConstructor
 public class MstCustomerService {
+	/** 顧客マスタリポジトリ */
 	private final MstCustomerRepository mstCustomerRepository;
 
 	/**
