@@ -15,12 +15,13 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtil {
 
 	private static final String SECRET = "your-256-bit-secret-your-256-bit-secret"; // 32文字以上必要
-
 	private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
+	private static final int EXPIRATION = 5; // トークン期限切れ(分)
 
 	public String generateToken(String username) {
 		return Jwts.builder().setSubject(username).setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)).signWith(SECRET_KEY).compact();
+				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * EXPIRATION)).signWith(SECRET_KEY)
+				.compact();
 	}
 
 	public String extractUsername(String token) {

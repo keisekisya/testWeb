@@ -32,7 +32,7 @@ public class AuthService {
 			authenticationManager
 					.authenticate(new UsernamePasswordAuthenticationToken(dto.getUserName(), dto.getPassword()));
 		} catch (BadCredentialsException e) {
-			throw new BusinessException("B00004", HttpStatus.UNAUTHORIZED);
+			throw new BusinessException("B00005", HttpStatus.UNAUTHORIZED);
 		}
 
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(dto.getUserName());

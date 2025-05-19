@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jp.keisekisya.webapi.util.Const;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,9 +19,9 @@ public class GetMstCustomerBean {
 	private String customerName;
 	private String customerAddr;
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = Const.DATE_FORMAT)
 	private LocalDateTime createdAt;
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = Const.DATE_FORMAT)
 	private LocalDateTime updatedAt;
 }

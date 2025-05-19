@@ -1,8 +1,5 @@
 package jp.keisekisya.webapi.handler;
 
-import java.util.Locale;
-
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -12,15 +9,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jp.keisekisya.webapi.dto.ErrorResponseDto;
+import jp.keisekisya.webapi.util.MessageUtils;
 import lombok.AllArgsConstructor;
+import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
 @AllArgsConstructor
 public class GlobalExceptionHandler {
-
-	private final MessageSource messageSource;
+	private final MessageUtils messageUtils;
 
 	// バリデーションエラーをキャッチしてレスポンスを返す
 	@ExceptionHandler(BindException.class)
@@ -30,38 +28,28 @@ public class GlobalExceptionHandler {
 			errorMessage.append(fieldError.getField()).append(": ").append(fieldError.getDefaultMessage()).append("; ");
 		}
 		log.warn(errorMessage.toString());
-		ErrorResponseDto errorResponse = new ErrorResponseDto("B00002", getMessage("B00002"));
+		val errorResponse = new ErrorResponseDto("B00002", messageUtils.getMessage("B00002"));
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
 	}
 
 	@ExceptionHandler(InternalAuthenticationServiceException.class)
 	public ResponseEntity<ErrorResponseDto> handleException(InternalAuthenticationServiceException ex) {
 		log.error(ex.getMessage(), ex);
-		ErrorResponseDto errorResponse = new ErrorResponseDto("B00004", getMessage("B00004"));
+		val errorResponse = new ErrorResponseDto("B00004", messageUtils.getMessage("B00004"));
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
 	}
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponseDto> handleException(Exception ex) {
 		log.error(ex.getMessage(), ex);
-		ErrorResponseDto errorResponse = new ErrorResponseDto("E00001", getMessage("E00001"));
+		val errorResponse = new ErrorResponseDto("E00001", messageUtils.getMessage("E00001"));
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	}
 
 	@ExceptionHandler(BusinessException.class)
 	public ResponseEntity<ErrorResponseDto> handleException(BusinessException ex) {
 		log.error(ex.getMessage());
-		ErrorResponseDto errorResponse = new ErrorResponseDto(ex.getCode(), getMessage(ex.getCode()));
+		val errorResponse = new ErrorResponseDto(ex.getCode(), messageUtils.getMessage(ex.getCode()));
 		return ResponseEntity.status(ex.getStatus()).body(errorResponse);
-	}
-
-	/**
-	 * エラーメッセージ取得
-	 * 
-	 * @param code コード
-	 * @return メッセージ
-	 */
-	private String getMessage(final String code) {
-		return messageSource.getMessage(code, null, Locale.getDefault());
 	}
 }
