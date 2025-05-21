@@ -35,9 +35,7 @@ class MstCustomerControllerTest {
 	@Test
 	void regist_shouldCallServiceWithValidRequest() throws Exception {
 		// テスト用のリクエストデータ作成（仮のフィールド名）
-		val request = new RegistMstCustomerRequest();
-		request.setCompanyId("01000");
-		request.setCustomerName("あいうえお");
+		val request = RegistMstCustomerRequest.builder().companyId("01000").customerName("あいうえお").build();
 
 		// JSON に変換
 		String json = objectMapper.writeValueAsString(request);

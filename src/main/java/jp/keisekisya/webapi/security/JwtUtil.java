@@ -4,23 +4,35 @@ import java.util.Date;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class JwtUtil {
 
-	private static final String SECRET = "your-256-bit-secret-your-256-bit-secret"; // 32文字以上必要
-	private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
-	private static final int EXPIRATION = 5; // トークン期限切れ(分)
+	/** シークレットキー */
+	@Value("${jwt.secret:your_secret_key_here}")
+	private String secret;
+	private SecretKey secretKey;
+
+	/** トークン期限切れ(分) */
+	@Value("${jwt.expiration:10}")
+	private int expiration;
+
+	@PostConstruct
+	public void init() {
+		this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+	}
 
 	public String generateToken(String username) {
 		return Jwts.builder().setSubject(username).setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * EXPIRATION)).signWith(SECRET_KEY)
+				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * expiration)).signWith(secretKey)
 				.compact();
 	}
 
@@ -33,7 +45,7 @@ public class JwtUtil {
 	}
 
 	public Claims getClaims(String token) {
-		return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody();
+		return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
 	}
 
 	public boolean validateToken(String token, UserDetails userDetails) {
